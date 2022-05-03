@@ -1,6 +1,9 @@
 {
-  "entryPoints": [
-    "./src/modificacion.ts"
-  ],
-  "out": "./docs"
-}
+    "entryPoints": [
+      "./src/note.ts",
+      "./src/noteApp.ts",
+      "./src/notesFileSystem.ts",
+      "./src/userNotes.ts"
+    ],
+    "out": "./docs"
+  }
