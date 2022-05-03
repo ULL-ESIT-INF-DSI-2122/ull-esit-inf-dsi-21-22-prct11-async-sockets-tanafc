@@ -13,8 +13,7 @@ export class RequestClient extends EventEmitter {
 
       let messageLimit = wholeResponse.indexOf('\n');
       while (messageLimit !== -1) {
-        // const response = JSON.parse(wholeResponse.substring(0, messageLimit));
-        const response = wholeResponse.substring(0, messageLimit);
+        const response = JSON.parse(wholeResponse.substring(0, messageLimit));
         this.emit('response', response);
 
         wholeResponse = wholeResponse.substring(messageLimit + 1);

@@ -14,7 +14,6 @@ export class ReceiverServer extends EventEmitter {
 
     this.server = net.createServer((connection) => {
       console.log('A client has connected.');
-      connection.write(`Connection established.\n`);
 
       connection.on('close', () => {
         console.log('A client has disconnected.');

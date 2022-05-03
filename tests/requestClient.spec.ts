@@ -10,7 +10,7 @@ describe('RequestClient', () => {
     const client = new RequestClient(socket);
 
     client.on('response', (response) => {
-      expect(response).to.be.eql('{"type": "add", "success": true}');
+      expect(response).to.be.eql({"type": "add", "success": true});
       done();
     });
 
