@@ -4,7 +4,16 @@
 export type ColorChoice = "yellow" | "red" | "blue" | "green";
 
 /**
- * Class to represent a Note and its basic aytributes
+ * Interface that represents a series of attributes of a Note
+ */
+export interface NoteInterface {
+  title: string;
+  body: string;
+  color: ColorChoice;
+}
+
+/**
+ * Class to represent a Note and its basic attributes
  */
 export class Note {
   /**

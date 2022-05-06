@@ -3,7 +3,11 @@
       "./src/note.ts",
       "./src/noteApp.ts",
       "./src/notesFileSystem.ts",
-      "./src/userNotes.ts"
+      "./src/userNotes.ts",
+      "./src/connectionTypes.ts",
+      "./src/receiverServer.ts",
+      "./src/requestClient.ts",
+      "./src/serverApp.ts"
     ],
     "out": "./docs"
   }
