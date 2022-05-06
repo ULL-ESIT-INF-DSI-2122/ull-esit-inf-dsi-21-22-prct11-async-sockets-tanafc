@@ -1,6 +1,6 @@
 import {ReceiverServer} from './receiverServer';
 import {NotesFileSystem} from './notesFileSystem';
-import {ResponseType} from './connectionTypes';
+import {ResponseType} from './messageTypes';
 import {Note, ColorChoice} from './note';
 
 

@@ -3,7 +3,7 @@ import * as yargs from 'yargs';
 import {NoteInterface} from "./note";
 import {connect} from 'net';
 import {RequestClient} from './requestClient';
-import {ResponseType} from './connectionTypes';
+import {ResponseType} from './messageTypes';
 
 // The clients allows to make petitions to the server
 const client = new RequestClient(connect({port: 60200}));

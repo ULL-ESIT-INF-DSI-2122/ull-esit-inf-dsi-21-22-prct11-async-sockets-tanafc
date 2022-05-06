@@ -1,8 +1,7 @@
 import 'mocha';
 import {expect} from 'chai';
-import {EventEmitter} from 'events';
 import * as net from 'net';
-import {RequestClient} from '../src/clientNotes';
+import {RequestClient} from '../src/requestClient';
 
 describe('RequestClient', () => {
   it('Should emit a response event once it gets a complete message', (done) => {
@@ -16,6 +15,6 @@ describe('RequestClient', () => {
 
     socket.emit('data', '{"type": "add"');
     socket.emit('data', ', "success": true}');
-    socket.emit('data', '\n');
+    socket.emit('end');
   });
 });

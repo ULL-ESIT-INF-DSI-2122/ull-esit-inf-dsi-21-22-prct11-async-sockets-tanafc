@@ -1,4 +1,4 @@
-import {RequestType, ResponseType} from './connectionTypes';
+import {RequestType, ResponseType} from './messageTypes';
 import {EventEmitter} from 'events';
 import * as net from 'net';
 

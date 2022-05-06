@@ -1,6 +1,6 @@
 import * as net from 'net';
 import {EventEmitter} from 'events';
-import {RequestType, ResponseType} from './connectionTypes';
+import {RequestType, ResponseType} from './messageTypes';
 
 /**
  * Class that emits an event when a client connects and makes a
