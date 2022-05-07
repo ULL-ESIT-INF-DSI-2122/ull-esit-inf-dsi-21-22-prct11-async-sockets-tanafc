@@ -10,13 +10,13 @@ Los requisitos de la aplicación son similares a los de la práctica anteriormen
 
 En este caso, será el servidor el encargado de hacer persistente la lista de notas de cada usuario. Así, todas las notas se almacenarán en un fichero JSON bajo el directorio del usuario correspondiente. Asimismo, será el servidor el encargado de cargar las notas de los diferentes ficheros, con el objetivo de procesar las peticiones del cliente y devolver las respuestas apropiadas.
 
-El usuario interactirará con la aplicación a través de la línea de comandos del cliente, que será el encargado de enviar las peticiones al servidor. Los diferentes comandos se gestionarán mediante el paquete `yargs`.
+El usuario interactuará con la aplicación a través de la línea de comandos del cliente, que será el encargado de enviar las peticiones al servidor. Los diferentes comandos se gestionarán mediante el paquete `yargs`.
 
 De esta manera se muestra a continuación la implementación del código desarrollado.
 
 ### Implementación
 
-La aplicación de un servidor para el manejo de los ficheros y el procesamiento de las peticiones del cliente se ha llevado a cabo mediante la creación de una clase `receiverServer`. Además, el cliente permitirá enviar las peticiones con su correspondiente clase `requestClient`. Ambas clases emitirán eventos propios cuando se reciba la petición del cliente, y cuando el cliente reciba la respuesta del servidor.
+La aplicación de un servidor para el manejo de los ficheros y el procesamiento de las peticiones del cliente se ha llevado a cabo mediante la creación de una clase `ReceiverServer`. Además, el cliente permitirá enviar las peticiones con su correspondiente clase `RequestClient`. Ambas clases emitirán eventos propios cuando se reciba la petición del cliente, y cuando el cliente reciba la respuesta del servidor.
 
 El intercambio de mensajes entre el servidor y cliente se realiza mediante dos tipos de datos definidos en el fichero `messageTypes`, donde existe un tipo `RequestType` para el envío de peticiones del cliente, y `ResponseType` para las respuestas de servidor hacia el cliente.
 
@@ -44,11 +44,11 @@ Las `RequestType` indicarán el tipo de petición que es, el usuario a revisar s
 
 `ResponseType`, además de indicar el tipo de petición al que la respuesta se atribuye, tiene un campo `success` para indicar si la petición se ha llevado a cabo de manera correcta, además de un parámetro opcional `description` para que el servidor envíe una explicación si la operación no se ha llevado a cabo de manera correcta. El campo `notes` devolverá al cliente un grupo de notas en caso de que este último las haya solicitado.
 
-Se procede así a la explicación del código del cliente y servidor.
+Se procede así a la explicación del código implementado del cliente y servidor.
 
 ### Implementación del Servidor
 
-Para la recepción de peticiones del servidor, como se comentó anteriormente, se ha implementado una clase `ReceiveServer`, que extiende de la clase `EventEmitter` con el objetivo de emitir un evento cada vez que se recibe dicha petición, para que el código del servidor pueda procesar la respuesta.
+Para la recepción de peticiones del servidor, como se comentó anteriormente, se ha implementado una clase `ReceiveServer`, que extiende de la clase `EventEmitter` con el objetivo de emitir un evento cada vez que se recibe una petición, para que el código del servidor pueda procesar la respuesta.
 ```ts
 export class ReceiverServer extends EventEmitter {
   private server: net.Server;
@@ -83,9 +83,9 @@ export class ReceiverServer extends EventEmitter {
 }
 ```
 
-De esta manera, la clase implementa un atributo `server` donde se almacenará el objeto devuelto por `net.createServer`. Esto permitirá más adelante cerrar el servidor a través del método `closeServer`. En el constructor, el servidor se abre con la opción `{allowHalfOpen: true}` para que el servidor pueda responder al cliente aunque éste haya cerrado su lado del socket. De esta manera, el manejador de `createServer` se ejecutará cuando un cliente se conecte. Ante la recepción de una petición, se irá almacenando en la variable `wholeRequest`, hasta que el servidor envíe un evento de tipo `end`. Esto significará que se ha terminado de enviar la petición, y por lo tanto, la clase emitirá un evento `request`, que devolverá como parámetros la petición parseada y el socket de la conexión.
+De esta manera, la clase implementa un atributo `server` donde se almacenará el objeto devuelto por `net.createServer`. Esto permitirá más adelante cerrar el servidor a través del método `closeServer`. En el constructor, el servidor se abre con la opción `{allowHalfOpen: true}` para que el servidor pueda responder al cliente aunque éste haya cerrado su lado del socket. De esta manera, el manejador de `createServer` se ejecutará cuando un cliente se conecte. Ante la recepción de una petición, se irán almacenando sus datos en la variable `wholeRequest`, hasta que el cliente envíe un evento de tipo `end`. Esto significará que se ha terminado de enviar la petición, y por lo tanto, la clase emitirá un evento `request`, que devolverá como parámetros la petición y el socket de la conexión.
 
-De esta manera el código del servidor, que se encuentra en el fichero `serverApp`, ejecutará las acciones correspondientes cuando el servidor emita un evento `request`.
+De esta manera, el código del servidor, que se encuentra en el fichero `serverApp`, ejecutará las acciones correspondientes cuando emita un evento `request`.
 
 ```ts
 const notesDataBase = new NotesFileSystem();
@@ -230,15 +230,15 @@ server.on('request', (request, socket) => {
 });
 ```
 
-Así, el manejador del evento `request` procesará la petición recibida, obteniendo las notas del usuario correspondiente, y rellenando, en cada opción, la respuesta adecuada. Por ejemplo, en el caso de la petición sea de tipo `add`, creará una nueva nota y la añadirá mediante el método `addNewNote` de la clase `NotesFileSystem` implementada en la práctica anterior. Si la acción se realiza exitosamente, la respuesta tendrá el atributo `success` a `true` y enviará una descripción con los resultados de la operación. En caso de fallo, por ejemplo, porque ya existe una nota con el mismo nombre, el campo `success` se pondrá a `false` y la descripción describirá este hecho.
+Así, el manejador del evento `request` procesará la petición recibida, obteniendo las notas del usuario correspondiente, y rellenando, en cada opción, la respuesta adecuada. Por ejemplo, en el caso de la petición sea de tipo `add`, creará una nueva nota y la añadirá mediante el método `addNewNote` de la clase `NotesFileSystem` implementada en la práctica anterior. Si la acción se realiza exitosamente, la respuesta tendrá el atributo `success` a `true` y enviará una descripción con los resultados de la operación. En caso de fallo, por ejemplo, porque ya existe una nota con el mismo nombre, el campo `success` se pondrá a `false` y la descripción explicará este hecho.
 
-De manera similar, en otros tipos de petición, los campos de la respuesta se rellenarán de manera correspondiente. En los casos de los tipos `read` y `list`, la respuesta contendrá en el campo de `notes` las notas que el cliente habrá solicitado.
+De manera similar, en otros tipos de petición, los campos de la respuesta se rellenarán como correspondan. En los casos de los tipos `read` y `list`, la respuesta contendrá en el campo de `notes` las notas que el cliente habrá solicitado.
 
 Por último, el código del servidor envía la respuesta mediante el método `sendResponse` de la clase `ReceiverServer`, la cual enviará la respuesta y cerrará el socket de la conexión.
 
 ### Implementación del Cliente
 
-Para realizar las peticiones al servidor, una clase `RequestClient` permitirá realizar una conexión al servidor al servidor y emitir eventos `response` cuando le el servidor envíe la respuesta.
+Para realizar las peticiones al servidor, una clase `RequestClient` permitirá realizar una conexión al servidor y emitir eventos `response` cuando el servidor envíe la respuesta.
 ```ts
 /**
  * Class that emits an event when a server replies to the request.
@@ -349,12 +349,11 @@ export interface NoteInterface {
 }
 ```
 
-De esta manera, como el objeto devuelto por response.notes es de tipo `Note`, primero se realiza su conversión a `unknown`, para seguidamente pasar a tipo `NoteInterface` y así, poder acceder de manera directa a sus atributos.
+De esta manera, como el objeto devuelto por response.notes es de tipo `Note`, primero se realiza su conversión a `unknown`, para seguidamente pasar a tipo `NoteInterface`, y así poder acceder de manera directa a sus atributos.
 
 Por último, para el resto de tipos de respuesta, en los casos de `add`, `update` y `remove`, simplemente se imprimirá el mensaje informativo del servidor en el parámetro `description` en color verde.
 
-Para el procesamiento de los parámetros por línea de comandos, como se comentó anteriormente, se realiza mediante el paquete `yargs`. Al igual que la práctica 9, 
-se definirán manejadores para cada tipo de petición correspondiente, que requerirá de sus parámetros correspondientes.
+Para el procesamiento de los parámetros por línea de comandos, como se comentó anteriormente, se utiliza el paquete `yargs`. Al igual que la práctica 9, se definirán manejadores para cada tipo de petición correspondiente, que requerirán de sus parámetros propios.
 ```ts
 // Add command to add a new user`s note
 yargs.command({
@@ -404,7 +403,7 @@ De esta manera se realizaría la interacción entre el programa cliente y servid
 ![Ejecución del programa cliente y servidor](./img/ejecucion_programa.JPG)
 
 ### Pruebas
-Se han implementado algunas pruebas para el código del cliente y servidor. En especial, se han puesto en funcionamiento las emisiones de eventos tipo `request` de la clase `ReceiverServer` y de tipo `response` de la clase `RequestClient`. De esta manera, se podrá asegurar el correcto funcionamiento de las mismas, observando como ante la recepción de una petición por parte del cliente, éste emite el correspondiente evento:
+Se han implementado algunas pruebas para el código del cliente y servidor. En especial, se han evaluado las emisiones de eventos tipo `request` de la clase `ReceiverServer` y de tipo `response` de la clase `RequestClient`. De esta manera, se podrá asegurar el correcto funcionamiento de las mismas, observando como ante la recepción de una petición por parte del cliente, éste emite el correspondiente evento:
 ```ts
 describe('ReceiverServer', () => {
   it('Should emit a response event once it gets a complete request', (done) => {
@@ -460,4 +459,4 @@ La ejecución de las pruebas permitirá observar su correcta implementación:
 ### Conclusión
 De esta manera, se ha llevado a cabo la implementación de un programa cliente, que permite realizar las peticiones a un servidor, cuyo programa permitirá recibir las mismas, gestionar el procesamiento de las notas, y enviar una respuesta al cliente.
 
-Se ha puesto en práctica el conocimiento sobre la clase `EventEmitter`, para que las clases puedieran emitir sus propios eventos, así como del módulo `net` de `fs` para el manejo de las conexiones entre un servidor local y un cliente, mediante el uso de objetos `Server` y `Socket`. Con ello, se han implementado los manejadores correspondientes para el manejo de los eventos de la conexión en el socket, puediendo desarrollar así la aplicación cliente-servidor.
+Se ha puesto en práctica el conocimiento sobre la clase `EventEmitter`, para que las clases puedan emitir sus propios eventos, así como del módulo `net` de `fs` para el manejo de las conexiones entre un servidor local y un cliente, mediante el uso de objetos `Server` y `Socket`. Con ello, se han implementado los manejadores correspondientes para los eventos de la conexión en el socket, puediendo desarrollar así una aplicación cliente-servidor.
