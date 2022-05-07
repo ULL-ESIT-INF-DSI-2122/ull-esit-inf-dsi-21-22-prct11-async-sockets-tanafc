@@ -42,4 +42,12 @@ export class ReceiverServer extends EventEmitter {
     socket.write(JSON.stringify(response));
     socket.end();
   }
+
+  /**
+   * Waits for all connections to end and closes the
+   * server when all requests are attended.
+   */
+  public closeServer() {
+    this.server.close();
+  }
 }

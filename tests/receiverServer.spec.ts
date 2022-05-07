@@ -10,6 +10,7 @@ describe('ReceiverServer', () => {
     const client = new RequestClient(net.connect({port: 60100}));
 
     server.on('request', (request) => {
+      server.closeServer();
       expect(request).to.be.eql({
         "type": "add",
         "user": "john",
