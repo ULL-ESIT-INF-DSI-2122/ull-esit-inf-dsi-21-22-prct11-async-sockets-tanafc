@@ -1,6 +1,7 @@
 # Práctica 11 - Cliente y servidor para una aplicación de procesamiento de notas de texto
 [![Coverage Status](https://coveralls.io/repos/github/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct11-async-sockets-tanafc/badge.svg?branch=master)](https://coveralls.io/github/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct11-async-sockets-tanafc?branch=master)
 [![Tests](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct11-async-sockets-tanafc/actions/workflows/tests.js.yml/badge.svg)](https://github.com/ULL-ESIT-INF-DSI-2122/ull-esit-inf-dsi-21-22-prct11-async-sockets-tanafc/actions/workflows/tests.js.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ULL-ESIT-INF-DSI-2122_ull-esit-inf-dsi-21-22-prct11-async-sockets-tanafc&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ULL-ESIT-INF-DSI-2122_ull-esit-inf-dsi-21-22-prct11-async-sockets-tanafc)
 ## Objetivos
 A partir de la aplicación de procesamiento de notas llevada a cabo en la Práctica 9, se propone el desarrollo de un servidor y un cliente haciendo uso de los sockets proporcionados por el módulo `net` de Node.js.
 
