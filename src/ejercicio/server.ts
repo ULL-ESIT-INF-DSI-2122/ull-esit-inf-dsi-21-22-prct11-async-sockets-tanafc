@@ -2,7 +2,7 @@ import * as express from 'express';
 import {spawn} from 'child_process';
 
 /**
- * Inializing the Express server
+ * Express server
  */
 const app = express();
 
